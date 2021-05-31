@@ -1,5 +1,7 @@
+import re
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, request
+from rest_framework.views import APIView
 from .models import Report, User
 from .serializers import ReportSerializer, UserSerializer
 from rest_framework.response import Response
@@ -15,4 +17,26 @@ class ReportListView(generics.GenericAPIView, mixins.ListModelMixin):
     
     def get(self, request):
         return self.list(request)
+
+# view for user history and create report by user
+class ReportUserView(generics.GenericAPIView, mixins.ListModelMixin,
+                       mixins.RetrieveModelMixin, mixins.CreateModelMixin):
+    
+    serializer_class = ReportSerializer
+    # lookup_field = 'user_id'
+    
+    def get_queryset(self):
+        user = User.objects.get(id=self.kwargs['user_id'])
+        return user.report_set.all()
+        
+    
+    def get(self, request, **kwargs):
+        return self.list(request)
+
+
+    def post(self, request, **kwargs):
+        if (user_id := request.data.get("user_id")):
+            request.data['user_id'] = user_id
+            return self.create(request, **kwargs)
+        return self.create(request, **kwargs)
 
