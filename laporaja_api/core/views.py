@@ -23,7 +23,6 @@ class ReportUserView(generics.GenericAPIView, mixins.ListModelMixin,
                        mixins.RetrieveModelMixin, mixins.CreateModelMixin):
     
     serializer_class = ReportSerializer
-    # lookup_field = 'user_id'
     
     def get_queryset(self):
         user = User.objects.get(id=self.kwargs['user_id'])
@@ -40,3 +39,12 @@ class ReportUserView(generics.GenericAPIView, mixins.ListModelMixin,
             return self.create(request, **kwargs)
         return self.create(request, **kwargs)
 
+
+# view to add user
+class UserView(generics.GenericAPIView, mixins.CreateModelMixin):
+    
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    
+    def post(self,request):
+        return self.create(request)
