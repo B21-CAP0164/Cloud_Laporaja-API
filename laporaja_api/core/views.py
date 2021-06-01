@@ -18,7 +18,7 @@ class ReportListView(generics.GenericAPIView, mixins.ListModelMixin):
     def get(self, request):
         return self.list(request)
 
-# view for user history and create report by user
+# view for user history, reports detail and create report by user
 class ReportUserView(generics.GenericAPIView, mixins.ListModelMixin,
                        mixins.RetrieveModelMixin, mixins.CreateModelMixin):
     
@@ -30,11 +30,19 @@ class ReportUserView(generics.GenericAPIView, mixins.ListModelMixin,
         
     
     def get(self, request, **kwargs):
-        return self.list(request)
+        if self.kwargs['id'] and self.kwargs['user_id']:
+            try:
+                report = Report.objects.get(id=self.kwargs.get('id'), user_id=self.kwargs.get('user_id'))
+                serializer = ReportSerializer(report)
+                return Response(serializer.data)
+            except Report.DoesNotExist:
+                return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        else:
+            return self.list(request)
 
 
     def post(self, request, **kwargs):
-        if (user_id := request.data.get("user_id")):
+        if (user_id := request.data.get('user_id')):
             request.data['user_id'] = user_id
             return self.create(request, **kwargs)
         return self.create(request, **kwargs)
