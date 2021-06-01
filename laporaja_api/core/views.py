@@ -30,7 +30,7 @@ class ReportUserView(generics.GenericAPIView, mixins.ListModelMixin,
         
     
     def get(self, request, **kwargs):
-        if self.kwargs['id'] and self.kwargs['user_id']:
+        if 'id' in self.kwargs:
             try:
                 report = Report.objects.get(id=self.kwargs.get('id'), user_id=self.kwargs.get('user_id'))
                 serializer = ReportSerializer(report)
@@ -42,9 +42,7 @@ class ReportUserView(generics.GenericAPIView, mixins.ListModelMixin,
 
 
     def post(self, request, **kwargs):
-        if (user_id := request.data.get('user_id')):
-            request.data['user_id'] = user_id
-            return self.create(request, **kwargs)
+        request.data['user'] = self.kwargs['user_id']
         return self.create(request, **kwargs)
 
 
