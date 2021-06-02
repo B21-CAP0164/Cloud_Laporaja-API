@@ -33,7 +33,7 @@ class ReportHistoryView(generics.GenericAPIView, mixins.ListModelMixin,
         try: 
             return self.list(request)
         except User.DoesNotExist:
-            data = [{}]
+            data = []
             return JsonResponse(data, safe=False)
             
 
@@ -42,6 +42,7 @@ class ReportDetailView(generics.GenericAPIView, mixins.ListModelMixin,
                        mixins.RetrieveModelMixin, mixins.CreateModelMixin):
     
     serializer_class = ReportDetailSerializer
+    lookup_field = "id"
     
     def get_queryset(self):
         # report = Report.objects.get(id=self.kwargs.get('id'), user_id=self.kwargs.get('user_id'))

@@ -11,21 +11,51 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import io
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+env_file = os.path.join(BASE_DIR, ".env")
+
+env = environ.Env()
+# If no .env has been provided, pull it from Secret Manager
+if os.path.isfile(env_file):
+    env.read_env(env_file)
+else:
+    # Create local settings if running with CI, for unit testing
+    if os.getenv("TRAMPOLINE_CI", None):
+        placeholder = f"SECRET_KEY=a\nGS_BUCKET_NAME=none\nDATABASE_URL=sqlite://{os.path.join(BASE_DIR, 'db.sqlite3')}"
+        env.read_env(io.StringIO(placeholder))
+    else:
+        # [START cloudrun_django_secretconfig]
+        import google.auth
+        from google.cloud import secretmanager
+
+        _, project = google.auth.default()
+
+        if project:
+            client = secretmanager.SecretManagerServiceClient()
+
+            SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "django_settings")
+            name = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
+            payload = client.access_secret_version(name=name).payload.data.decode(
+                "UTF-8"
+            )
+        env.read_env(io.StringIO(payload))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'SECRET_KEY'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +69,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    "storages",
 
     'core'
 ]
@@ -77,16 +108,7 @@ WSGI_APPLICATION = 'laporaja_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'DB_NAME',
-        'USER': 'DB_USER',
-        'PASSWORD': 'DB_PASSWORD',
-        'HOST': 'DB_HOST',
-        'PORT': '3306',
-    }
-}
+DATABASES = {"default": env.db()}
 
 
 # Password validation
@@ -125,9 +147,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+GS_DEFAULT_ACL = "publicRead"
