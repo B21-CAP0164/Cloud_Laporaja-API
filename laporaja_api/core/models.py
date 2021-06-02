@@ -1,13 +1,16 @@
 from django.db import models
 import uuid
 import os
+import random
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return os.path.join('img', filename)
 
+
 class User(models.Model):
+    id = models.CharField(max_length=22, primary_key=True)
     name = models.CharField(max_length=100)
     email = models.EmailField()
 
