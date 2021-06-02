@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, request
 from rest_framework.views import APIView
 from .models import Report, User
-from .serializers import ReportSerializer, UserSerializer
+from .serializers import ReportListSerializer, ReportDetailSerializer,  UserSerializer
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework import generics
@@ -12,17 +12,17 @@ from rest_framework import mixins
 # view to list 5 lastest reports
 class ReportListView(generics.GenericAPIView, mixins.ListModelMixin):
     
-    serializer_class = ReportSerializer
+    serializer_class = ReportListSerializer
     queryset = Report.objects.all().order_by('-id')[:5]
     
     def get(self, request):
         return self.list(request)
 
 # view for user history, reports detail and create report by user
-class ReportUserView(generics.GenericAPIView, mixins.ListModelMixin,
+class ReportHistoryView(generics.GenericAPIView, mixins.ListModelMixin,
                        mixins.RetrieveModelMixin, mixins.CreateModelMixin):
     
-    serializer_class = ReportSerializer
+    serializer_class = ReportListSerializer
     
     def get_queryset(self):
         user = User.objects.get(id=self.kwargs['user_id'])
@@ -30,16 +30,31 @@ class ReportUserView(generics.GenericAPIView, mixins.ListModelMixin,
         
     
     def get(self, request, **kwargs):
-        if 'id' in self.kwargs:
-            try:
-                report = Report.objects.get(id=self.kwargs.get('id'), user_id=self.kwargs.get('user_id'))
-                serializer = ReportSerializer(report)
-                return Response(serializer.data)
-            except Report.DoesNotExist:
-                return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-        else:
-            return self.list(request)
+        return self.list(request)
 
+
+class ReportDetailView(generics.GenericAPIView, mixins.ListModelMixin,
+                       mixins.RetrieveModelMixin, mixins.CreateModelMixin):
+    
+    serializer_class = ReportDetailSerializer
+    
+    def get_queryset(self):
+        # report = Report.objects.get(id=self.kwargs.get('id'), user_id=self.kwargs.get('user_id'))
+        return Report.objects.filter(id=self.kwargs.get('id'), user_id=self.kwargs.get('user_id'))
+        
+    
+    def get(self, request, **kwargs):
+        return self.list(request)
+
+class ReportPostView(generics.GenericAPIView, mixins.ListModelMixin,
+                       mixins.RetrieveModelMixin, mixins.CreateModelMixin):
+    
+    serializer_class = ReportDetailSerializer
+    
+    def get_queryset(self):
+        user = User.objects.get(id=self.kwargs['user_id'])
+        return user.report_set.all()
+        
 
     def post(self, request, **kwargs):
         request.data['user'] = self.kwargs['user_id']
