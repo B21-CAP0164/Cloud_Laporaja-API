@@ -1,5 +1,5 @@
 import re
-from django.http.response import Http404
+from django.http.response import Http404, JsonResponse
 from django.shortcuts import render
 from django.http import HttpResponse, request
 from rest_framework.views import APIView
@@ -28,13 +28,14 @@ class ReportHistoryView(generics.GenericAPIView, mixins.ListModelMixin,
     def get_queryset(self):
         user = User.objects.get(id=self.kwargs['user_id'])
         return user.report_set.all()
-        
     
     def get(self, request, **kwargs):
         try: 
             return self.list(request)
-        except:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            data = [{}]
+            return JsonResponse(data, safe=False)
+            
 
 
 class ReportDetailView(generics.GenericAPIView, mixins.ListModelMixin,
