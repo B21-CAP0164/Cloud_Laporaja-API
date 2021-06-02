@@ -18,7 +18,7 @@ class ReportDetailSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         """ Override `to_representation` method """
         repr = super().to_representation(instance)
-        repr['user_id'] = str(repr['user_id'])  
+        repr['user'] = str(repr['user'])  
         return repr
 
     class Meta:
