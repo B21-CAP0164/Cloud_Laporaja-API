@@ -1,4 +1,5 @@
 import re
+from django.http.response import Http404
 from django.shortcuts import render
 from django.http import HttpResponse, request
 from rest_framework.views import APIView
@@ -30,7 +31,10 @@ class ReportHistoryView(generics.GenericAPIView, mixins.ListModelMixin,
         
     
     def get(self, request, **kwargs):
-        return self.list(request)
+        try: 
+            return self.list(request)
+        except:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
 
 class ReportDetailView(generics.GenericAPIView, mixins.ListModelMixin,
@@ -44,7 +48,7 @@ class ReportDetailView(generics.GenericAPIView, mixins.ListModelMixin,
         
     
     def get(self, request, **kwargs):
-        return self.list(request)
+        return self.retrieve(request)
 
 class ReportPostView(generics.GenericAPIView, mixins.ListModelMixin,
                        mixins.RetrieveModelMixin, mixins.CreateModelMixin):
