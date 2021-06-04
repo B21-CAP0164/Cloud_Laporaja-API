@@ -5,9 +5,39 @@
 ### 1. Git Clone Project  
 ` git clone https://github.com/B21-CAP0164/laporaja-api.git `  
 
-### 2. Create Virtual Enviroment
+### 2. Create Virtual Enviroment  
+#### Install pip  
+`sudo apt-get install python3-pip `  
+#### Install venv  
+`sudo pip3 install virtualenv `  
+#### Create venv  
+` virtualenv venv `  
+#### Activate venv  
+`source venv/bin/activate `  
+
+### 3. Install Dependency  
+`pip install -r requirements.txt `  
+
+### 4. Create Secret Key in laporaja-api/settings.py  
+Create random secret key and fill Database information.  
+
+### 5. Migrate
+` python manage.py migrate `  
+
+### 6. Create Admin Account 
+`python manage.py createsuperuser `  
+
+### 7. Create Migration for Admin  
+` python manage.py makemigration `  
+
+### 8. Migrate
+` python manage.py migrate `  
+
+### 9. Run Server  
+` python manage.py runserver `
 
 
+---
 ## For Cloud Run Use  
 ### 1. Setup Variable 
 #### Extract Project ID form gcloud
@@ -121,3 +151,7 @@ gcloud run deploy polls-service \
     --add-cloudsql-instances {PROJECT_ID}:${REGION}:INSTANCE_NAME \
     --allow-unauthenticated
 `  
+
+
+---
+Reference: https://cloud.google.com/python/django/run
