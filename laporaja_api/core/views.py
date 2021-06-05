@@ -1,4 +1,5 @@
-import re
+import base64
+from django.core.files.base import ContentFile
 from django.http.response import Http404, JsonResponse
 from django.shortcuts import render
 from django.http import HttpResponse, request
@@ -63,6 +64,8 @@ class ReportPostView(generics.GenericAPIView, mixins.ListModelMixin,
         
 
     def post(self, request, **kwargs):
+        image_data = request['image']
+        request.data['image'] = ContentFile(base64.b64decode(image_data))
         request.data['user'] = self.kwargs['user_id']
         return self.create(request, **kwargs)
 
