@@ -67,7 +67,26 @@ class ReportPostView(generics.GenericAPIView, mixins.ListModelMixin,
         image_data = request.data['image']
         request.data['image'] = ContentFile(base64.b64decode(image_data), name='image.jpg')
         request.data['user'] = self.kwargs['user_id']
-        return self.create(request, **kwargs)
+        
+        serializer = self.get_serializer(data=request.data)
+        
+        if serializer.is_valid(raise_exception=True):
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                {
+                    'id': serializer.data.get('id')
+                },
+                status=status.HTTP_201_CREATED,
+                headers=headers
+            )
+        else:
+            return Response(
+                {
+                    'id': 0
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 # view to add user
