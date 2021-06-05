@@ -1,9 +1,10 @@
 import base64
 from django.core.files.base import ContentFile
 from django.http.response import Http404, JsonResponse
+from django.core.exceptions import *
 from django.shortcuts import render
 from django.http import HttpResponse, request
-from rest_framework.views import APIView
+from rest_framework.views import APIView, exception_handler
 from .models import Report, User
 from .serializers import ReportListSerializer, ReportDetailSerializer,  UserSerializer
 from rest_framework.response import Response
@@ -65,12 +66,14 @@ class ReportPostView(generics.GenericAPIView, mixins.ListModelMixin,
 
     def post(self, request, **kwargs):
         image_data = request.data['image']
-        request.data['image'] = ContentFile(base64.b64decode(image_data), name='image.jpg')
-        request.data['user'] = self.kwargs['user_id']
+        if request.data['image']:
+            request.data['image'] = ContentFile(base64.b64decode(image_data), name='image.jpg')
+            request.data['user'] = self.kwargs['user_id']
         
         serializer = self.get_serializer(data=request.data)
         
-        if serializer.is_valid(raise_exception=True):
+        try:
+            serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
             return Response(
@@ -80,13 +83,14 @@ class ReportPostView(generics.GenericAPIView, mixins.ListModelMixin,
                 status=status.HTTP_201_CREATED,
                 headers=headers
             )
-        else:
+        except BadRequest:
             return Response(
                 {
                     'id': 0
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
+
 
 
 # view to add user
