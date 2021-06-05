@@ -64,8 +64,8 @@ class ReportPostView(generics.GenericAPIView, mixins.ListModelMixin,
         
 
     def post(self, request, **kwargs):
-        image_data = request['image']
-        request.data['image'] = ContentFile(base64.b64decode(image_data))
+        image_data = request.data['image']
+        request.data['image'] = ContentFile(base64.b64decode(image_data), name='image.jpg')
         request.data['user'] = self.kwargs['user_id']
         return self.create(request, **kwargs)
 
