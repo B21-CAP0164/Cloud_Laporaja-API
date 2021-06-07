@@ -83,7 +83,7 @@ We deploy the API on Google Cloud Run, but for testing purpose we suggest to use
     
 ## Cloud Run Configuration
 We follow the steps from [Google Cloud documentation](https://cloud.google.com/python/django/run) to deploy the API on Cloud Run.
-To deploy [model service](https://github.com/B21-CAP0164/ML_Final-Project.git) using **Flask** framework just jump to the [Deploy](###-deploy-to-cloud-run) step.
+To deploy [model service](https://github.com/B21-CAP0164/ML_Final-Project.git) using **Flask** framework just jump to the [Deploy](#-deploy-to-cloud-run) step.
 
 ### Initialization
 1. **Login** to GCP or [**create an account**](https://console.cloud.google.com/freetrial?_ga=2.79791191.1147108650.1623074813-999576286.1622490512). If you new you can activate free trial with the amount of $300 credits.
