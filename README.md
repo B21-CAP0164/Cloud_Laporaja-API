@@ -75,11 +75,11 @@ We deploy the API on Google Cloud Run, but for testing purpose we suggest to use
     ```sh
     python manage.py runserver
     ```
-    Admin page : http://localhost:8000/admin
-    GET all report : http://localhost:8000/request
-    GET report history (for 1 user ID) : http://localhost:8000/request/[USER-ID]
-    POST report : http://localhost:8000/request/[USER-ID]/add
-    POST user : http://localhost:8000/user
+    - Admin page : http://localhost:8000/admin
+    - GET all report : http://localhost:8000/request
+    - GET report history (for 1 user ID) : http://localhost:8000/request/[USER-ID]
+    - POST report : http://localhost:8000/request/[USER-ID]/add
+    - POST user : http://localhost:8000/user
     
 ## Cloud Run Configuration
 We follow the steps from [Google Cloud documentation](https://cloud.google.com/python/django/run) to deploy the API on Cloud Run.
@@ -187,8 +187,8 @@ gsutil mb -l REGION gs://PROJECT_ID-media
     --add-cloudsql-instances [PROJECT_ID]:[REGION]:[INSTANCE_NAME] \
     --allow-unauthenticated
     ```
-    Admin page : url/admin
-    GET all report : url/request
-    GET report history (for 1 user ID) : url/request/[USER-ID]
-    POST report : url/request/[USER-ID]/add
-    POST user : url/user
+    - Admin page : url/admin
+    - GET all report : url/request
+    - GET report history (for 1 user ID) : url/request/[USER-ID]
+    - POST report : url/request/[USER-ID]/add
+    - POST user : url/user
