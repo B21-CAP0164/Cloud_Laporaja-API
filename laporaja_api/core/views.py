@@ -29,7 +29,7 @@ class ReportHistoryView(generics.GenericAPIView, mixins.ListModelMixin,
     
     def get_queryset(self):
         user = User.objects.get(id=self.kwargs['user_id'])
-        return user.report_set.all()
+        return user.report_set.all().order_by('-id')
     
     def get(self, request, **kwargs):
         try: 
