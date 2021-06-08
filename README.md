@@ -3,10 +3,9 @@ The main function of this API is:
 - Send GET request to get all the _reports_ data from the database.
 - Send GET request to get the _reports_ history of a user
 - Send POST request to post the _request_ data to the database.
-- Send POST request to post the _user_ data to the database.
 
 This API is using Django as its framework and MySQL for its database.
-There are no authentication feature yet in this API. 
+There are no authentication feature yet in this API, because we did the authentication in the Android side. We use Google account to sign in to the apps.
 We deploy the API on Google Cloud Run, but for testing purpose we suggest to use local environtment.
 <br/><br/>
 The database used in this API is actually a non-relational database. We suggest you use noSQL database like Firestore to store the data. Because the project's data structure is changed in the last minutes, we didn't have time to changed the database to noSQL database. 
@@ -82,7 +81,6 @@ The database used in this API is actually a non-relational database. We suggest 
     - GET all report : http://localhost:8000/request
     - GET report history (for 1 user ID) : http://localhost:8000/request/[USER-ID]
     - POST report : http://localhost:8000/request/[USER-ID]/add
-    - POST user : http://localhost:8000/user
     
 ## Cloud Run Configuration
 We follow the steps from [Google Cloud documentation](https://cloud.google.com/python/django/run) to deploy the API on Cloud Run.
@@ -194,4 +192,3 @@ gsutil mb -l REGION gs://PROJECT_ID-media
     - GET all report : url/request
     - GET report history (for 1 user ID) : url/request/[USER-ID]
     - POST report : url/request/[USER-ID]/add
-    - POST user : url/user
