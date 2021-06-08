@@ -8,6 +8,9 @@ The main function of this API is:
 This API is using Django as its framework and MySQL for its database.
 There are no authentication feature yet in this API. 
 We deploy the API on Google Cloud Run, but for testing purpose we suggest to use local environtment.
+<br/><br/>
+The database used in this API is actually a non-relational database. We suggest you use noSQL database like Firestore to store the data. Because the project's data structure is changed in the last minutes, we didn't have time to changed the database to noSQL database. 
+
 
 ## Local Configuration
 1. **Clone the project**
