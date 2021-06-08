@@ -8,7 +8,7 @@ This API is using Django as its framework and MySQL for its database.
 There are no authentication feature yet in this API, because we did the authentication in the Android side. We use Google account to sign in to the apps.
 We deploy the API on Google Cloud Run, but for testing purpose we suggest to use local environtment.
 <br/><br/>
-The database used in this API is actually a non-relational database. We suggest you use noSQL database like Firestore to store the data. Because the project's data structure is changed in the last minutes, we didn't have time to changed the database to noSQL database. 
+The database used in this API is actually a non-relational database. We suggest you use noSQL database like Firestore to store the data. Because the project's data structure is changed in the last minutes, we didn't have time to change the database to noSQL database. 
 
 
 ## Local Configuration
