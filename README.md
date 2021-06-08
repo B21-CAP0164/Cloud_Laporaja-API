@@ -2,7 +2,7 @@
 The main function of this API is:
 - Send GET request to get all the _reports_ data from the database.
 - Send GET request to get the _reports_ history of a user
-- Send POST request to post the _request_ data to the database.
+- Send POST request to post the _report_ data to the database.
 
 This API is using Django as its framework and MySQL for its database.
 There are no authentication feature yet in this API, because we did the authentication in the Android side. We use Google account to sign in to the apps.
