@@ -15,7 +15,7 @@ We deploy the API on Google Cloud Run, but for testing purpose we suggest to use
     git clone https://github.com/B21-CAP0164/laporaja-api.git
     ```
 2. Rename **settings.py** to **settings-cloud-run.py** and **settings-local.py** to **setting.py**
-2. **Create virtual environment**
+2. **Create virtual environment**<br/>
     Install pip
     ```sh
     sudo apt-get install python3-pip
@@ -33,7 +33,7 @@ We deploy the API on Google Cloud Run, but for testing purpose we suggest to use
     ```python
     pip install -r requirements.txt
     ```
-4. **Create MySQL database and grant user**
+4. **Create MySQL database and grant user**<br/>
     Login to MySQL database as root user
     ```sh
     mysql -u root -p
@@ -51,7 +51,7 @@ We deploy the API on Google Cloud Run, but for testing purpose we suggest to use
     ```sh
     quit;
     ```
-5. Fill the necessary information in laporaja-api/settings.py
+5. Fill the necessary information in laporaja-api/settings.py<br/>
     You need to fill **secret key** and **MySQL database connection** in the settings file.
     You can visit https://djecrety.ir/ to generate secret key. 
 
@@ -123,7 +123,7 @@ Cloud Run | To deploy the API container
     ```sh
     gcloud sql connect [INSTANCE NAME] --user=root
     ```
-2. Create user and grant privileges.
+2. Create user and grant privileges.<br/>
 **WARNING!** Using **%** as host is the same as making the user to have root level access by granting access from all host.
     ```sh
     CREATE USER '[USER-NAME]'@'%' IDENTIFIED BY 'password';
