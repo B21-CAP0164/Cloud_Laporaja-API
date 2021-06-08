@@ -28,7 +28,7 @@ class ReportHistoryView(generics.GenericAPIView, mixins.ListModelMixin,
     serializer_class = ReportListSerializer
     
     def get_queryset(self):
-        user = User.objects.get(id=self.kwargs['user_id'])
+        user = User.objects.get(google_id=self.kwargs['user_id'])
         return user.report_set.all().order_by('-id')
     
     def get(self, request, **kwargs):
@@ -37,8 +37,6 @@ class ReportHistoryView(generics.GenericAPIView, mixins.ListModelMixin,
         except User.DoesNotExist:
             data = []
             return JsonResponse(data, safe=False)
-            
-
 
 class ReportDetailView(generics.GenericAPIView, mixins.ListModelMixin,
                        mixins.RetrieveModelMixin, mixins.CreateModelMixin):
@@ -47,8 +45,7 @@ class ReportDetailView(generics.GenericAPIView, mixins.ListModelMixin,
     lookup_field = "id"
     
     def get_queryset(self):
-        # report = Report.objects.get(id=self.kwargs.get('id'), user_id=self.kwargs.get('user_id'))
-        return Report.objects.filter(id=self.kwargs.get('id'), user_id=self.kwargs.get('user_id'))
+        return Report.objects.filter(id=self.kwargs.get('id'), user__google_id=self.kwargs.get('user_id'))
         
     
     def get(self, request, **kwargs):
