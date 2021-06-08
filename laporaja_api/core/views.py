@@ -5,8 +5,8 @@ from django.core.exceptions import *
 from django.shortcuts import render
 from django.http import HttpResponse, request
 from rest_framework.views import APIView, exception_handler
-from .models import Report, User
-from .serializers import ReportListSerializer, ReportDetailSerializer,  UserSerializer
+from .models import Report
+from .serializers import ReportListSerializer, ReportDetailSerializer
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework import generics
@@ -28,13 +28,12 @@ class ReportHistoryView(generics.GenericAPIView, mixins.ListModelMixin,
     serializer_class = ReportListSerializer
     
     def get_queryset(self):
-        user = User.objects.get(google_id=self.kwargs['user_id'])
-        return user.report_set.all().order_by('-id')
+        return Report.objects.filter(google_id=self.kwargs.get('user_id'))
     
     def get(self, request, **kwargs):
         try: 
             return self.list(request)
-        except User.DoesNotExist:
+        except Report.DoesNotExist:
             data = []
             return JsonResponse(data, safe=False)
 
@@ -45,7 +44,7 @@ class ReportDetailView(generics.GenericAPIView, mixins.ListModelMixin,
     lookup_field = "id"
     
     def get_queryset(self):
-        return Report.objects.filter(id=self.kwargs.get('id'), user__google_id=self.kwargs.get('user_id'))
+        return Report.objects.filter(id=self.kwargs.get('id'), google_id=self.kwargs.get('user_id'))
         
     
     def get(self, request, **kwargs):
@@ -57,15 +56,14 @@ class ReportPostView(generics.GenericAPIView, mixins.ListModelMixin,
     serializer_class = ReportDetailSerializer
     
     def get_queryset(self):
-        user = User.objects.get(id=self.kwargs['user_id'])
-        return user.report_set.all()
+        return Report.objects.filter(google_id=self.kwargs.get('user_id'))
         
 
     def post(self, request, **kwargs):
         image_data = request.data['image']
         if request.data['image']:
             request.data['image'] = ContentFile(base64.b64decode(image_data), name='image.jpg')
-            request.data['user'] = self.kwargs['user_id']
+            request.data['google_id'] = self.kwargs['user_id']
         
         serializer = self.get_serializer(data=request.data)
         
@@ -87,14 +85,3 @@ class ReportPostView(generics.GenericAPIView, mixins.ListModelMixin,
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
-
-
-
-# view to add user
-class UserView(generics.GenericAPIView, mixins.CreateModelMixin):
-    
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
-    
-    def post(self,request):
-        return self.create(request)
