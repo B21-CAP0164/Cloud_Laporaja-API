@@ -10,7 +10,8 @@ def get_file_path(instance, filename):
 
 
 class User(models.Model):
-    id = models.CharField(max_length=22, primary_key=True)
+    id = models.AutoField(primary_key=True)
+    google_id = models.CharField(max_length=22, default=None, blank=True, null=True)
     name = models.CharField(max_length=100)
     email = models.EmailField()
 
