@@ -14,7 +14,7 @@ The database used in this API is actually a non-relational database. We suggest 
 ## Local Configuration
 1. **Clone the project**
     ```sh
-    git clone https://github.com/B21-CAP0164/laporaja-api.git
+    git clone https://github.com/B21-CAP0164/Cloud_Laporaja-API.git
     ```
 2. Rename **settings.py** to **settings-cloud-run.py** and **settings-local.py** to **setting.py**
 2. **Create virtual environment**<br/>
@@ -172,7 +172,7 @@ gsutil mb -l REGION gs://PROJECT_ID-media
 ### Deploy to Cloud Run
 1. **Clone the project**.
     ```sh
-    git clone https://github.com/B21-CAP0164/laporaja-api.git
+    git clone https://github.com/B21-CAP0164/Cloud_Laporaja-API.git
     ```
 2. **Run the cloudmigration.yaml file**. 
     ```sh
